@@ -18,7 +18,7 @@ import partlyCloudyNightAnimation from '../../lotties/partly-cloudy-night.json';
 import partlyCloudySunnyAnimation from '../../lotties/partly-cloudy-sunny.json';
 import sunnyAnimation from '../../lotties/sunny.json';
 
-const WeatherCondition = ({ weatherType }) => {
+const WeatherCondition = ({ weatherType, animationSize }) => {
     const [weatherAnimation, setWeatherAnimation] = useState(sunnyAnimation);
 
     const weatherTypes = [
@@ -106,7 +106,7 @@ const WeatherCondition = ({ weatherType }) => {
                 loop
                 animationData={weatherAnimation}
                 play
-                style={{ width: 400, height: 400 }}
+                style={{ width: animationSize, height: animationSize }}
             />
         </div>
     );

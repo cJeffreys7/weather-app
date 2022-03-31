@@ -2,8 +2,8 @@ const getCurrentWeatherInArea = async (latitude, longitude) => {
     return await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${process.env.REACT_APP_WEATHER_API_KEY}`).then(res => res.json());
 }
 
-const getHourlyWeatherForNext48Hours = async (latitude, longitude) => {
-    return await fetch(`https://api.openweathermap.org/data/2.5/hourly?lat=${latitude}&lon=${longitude}&appid=${process.env.REACT_APP_WEATHER_API_KEY}`).then(res => res.json());
+const getHourlyWeatherForNext48Hours = async (latitude, longitude, excludeList) => {
+    return await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exlude=${excludeList}&appid=${process.env.REACT_APP_WEATHER_API_KEY}`).then(res => res.json());
 }
 
 const getWeatherConditionFromWeatherCode = (weatherCode) => {

@@ -16,14 +16,11 @@ function App() {
 
   useEffect(() => {
     const getDeviceCurrentLocation = async () => {
-      let location = null;
       
       const getDeviceLocation = async (location) => {
-        location = location.coords;
-        
-        if (location) {
-          setCoordinates(location);
-          const cityFromCoordinates = await locationService.getCityFromLocation(location?.latitude, location?.longitude);
+        if (location.coords) {
+          setCoordinates(location.coords);
+          const cityFromCoordinates = await locationService.getCityFromLocation(location?.coords?.latitude, location?.coords?.longitude);
           setCity(cityFromCoordinates);
         }
     
@@ -57,8 +54,8 @@ function App() {
   return (
     <div className='App'>
       <Routes>
-        <Route path='/home' element={<Home city={city} coordinates={coordinates} />}/>
-        <Route path='/hourly-weather' element={<HourlyWeather />} />
+        <Route path='/home' element={<Home city={city} coordinates={coordinates} />} />
+        <Route path='/hourly-weather' element={<HourlyWeather city={city} coordinates={coordinates} />} />
       </Routes>
     </div>
   );

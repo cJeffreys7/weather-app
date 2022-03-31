@@ -35,6 +35,7 @@ const Home = ({ city, coordinates }) => {
                 temperature={currentTemperature}
                 high={dailyHigh}
                 low={dailyLow}
+                fullCard={true}
             />
         </div>
     );
