@@ -2,9 +2,9 @@ const getCurrentWeatherInArea = async (latitude, longitude) => {
     return await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${process.env.REACT_APP_WEATHER_API_KEY}`).then(res => res.json());
 }
 
-// const getWeatherInArea = async (latitude, longitude, part) => {
-//     return await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=${part}&appid=${process.env.REACT_APP_WEATHER_API_KEY}`).then(res => res.json());
-// }
+const getHourlyWeatherForNext48Hours = async (latitude, longitude) => {
+    return await fetch(`https://api.openweathermap.org/data/2.5/hourly?lat=${latitude}&lon=${longitude}&appid=${process.env.REACT_APP_WEATHER_API_KEY}`).then(res => res.json());
+}
 
 const getWeatherConditionFromWeatherCode = (weatherCode) => {
     switch(weatherCode) {
@@ -45,7 +45,7 @@ const getWeatherConditionFromWeatherCode = (weatherCode) => {
         case '50n':
             return 'heavy_fog';
         default:
-            return 'sunny';
+            return null;
     }
 }
 
@@ -62,7 +62,7 @@ const getCityFromLocation = async (latitude, longitude) => {
 
 export {
     getCurrentWeatherInArea,
-    // getWeatherInArea,
+    getHourlyWeatherForNext48Hours,
     getWeatherConditionFromWeatherCode,
     getFahrenheitTemperature,
     getCityFromLocation
