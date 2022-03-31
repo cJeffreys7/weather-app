@@ -27,7 +27,9 @@ const HourlyWeather = ({ city, coordinates }) => {
 
     return (
         <div className='hourly-weather-wrapper'>
-            Hourly Weather
+            <h1>
+                Hourly Weather
+            </h1>
             <div className="weather-cards">
                 {hourlyWeather?.map((hourWeather, index) => {
                     const temperature = weatherService.getFahrenheitTemperature(hourWeather?.temp);

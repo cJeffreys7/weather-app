@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import NavBar from '../components/NavBar/NavBar';
 
 // pages
 import Home from '../pages/Home/Home';
@@ -53,6 +54,7 @@ function App() {
 
   return (
     <div className='App'>
+      <NavBar />
       <Routes>
         <Route path='/home' element={<Home city={city} coordinates={coordinates} />} />
         <Route path='/hourly-weather' element={<HourlyWeather city={city} coordinates={coordinates} />} />

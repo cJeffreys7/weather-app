@@ -29,7 +29,7 @@ const WeatherCard = ({ city, temperature, weatherCondition, time, high, low, ful
             <Card variant="outlined">
                 <CardContent>
                     {fullCard && 
-                        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                        <Typography sx={{ fontSize: 32 }} gutterBottom>
                         {city ?
                             city 
                             :
@@ -49,12 +49,12 @@ const WeatherCard = ({ city, temperature, weatherCondition, time, high, low, ful
                     {fullCard ? 
                         <Typography variant="body2">
                             {high && city ?
-                                <span>{high} &#x2109;</span>
+                                <span>High: {high} &#x2109;</span>
                                 :
                                 <Skeleton variant='text' />}
                             <br />
                             {low && city ?
-                                <span>{low} &#x2109;</span>
+                                <span>Low: {low} &#x2109;</span>
                                 :
                                 <Skeleton variant='text' />}
                         </Typography>
