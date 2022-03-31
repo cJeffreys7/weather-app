@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import CardComponent from '../../components/WeatherCard/WeatherCard';
 import WeatherCondition from '../../components/WeatherCondition/WeatherCondition';
 import animationData from '../../lotties/sunny.json';
 
@@ -27,7 +28,7 @@ const Home = () => {
     return (
         <div>
             Weather App
-            <WeatherCondition weatherType='sunny'/>
+            <CardComponent weatherCondition='heavy_thunderstorm'/>
         </div>
     );
 };
