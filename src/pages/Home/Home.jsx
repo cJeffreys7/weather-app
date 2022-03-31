@@ -11,10 +11,11 @@ const Home = ({ weatherInfo, city }) => {
     const currentTemperature = weatherService.getFahrenheitTemperature(weatherInfo?.current?.temp);
     const dailyHigh = weatherService.getFahrenheitTemperature(weatherInfo?.daily[0]?.temp?.max);
     const dailyLow = weatherService.getFahrenheitTemperature(weatherInfo?.daily[0]?.temp?.min);
+    const weatherCondition = weatherService.getWeatherConditionFromWeatherCode(weatherInfo?.daily[0]?.weather[0]?.icon);
 
     return (
         <div>
-            <WeatherCard city={city} weatherCondition='heavy_thunderstorm' temperature={currentTemperature} high={dailyHigh} low={dailyLow} />
+            <WeatherCard city={city} weatherCondition={weatherCondition} temperature={currentTemperature} high={dailyHigh} low={dailyLow} />
         </div>
     );
 };

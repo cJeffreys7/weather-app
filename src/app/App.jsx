@@ -46,7 +46,7 @@ function App() {
             (coordinates?.longitude ? coordinates.longitude : '0'),
             ['minutely']
           );
-        // console.log('WEATHER: ', weatherData);
+        console.log('WEATHER: ', weatherData);
         const cityFromCoordinates = await weatherService.getCityFromLocation(weatherData?.lat, weatherData?.lon);
         setWeatherInfo(weatherData);
         setCity(cityFromCoordinates);
