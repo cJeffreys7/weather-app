@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import Lottie from 'react-lottie-player';
+import WeatherCondition from '../../components/WeatherCondition/WeatherCondition';
 import animationData from '../../lotties/sunny.json';
 
 // services
@@ -27,12 +27,7 @@ const Home = () => {
     return (
         <div>
             Weather App
-            <Lottie 
-                loop
-                animationData={animationData}
-                play
-                style={{ width: 400, height: 400 }}
-            />
+            <WeatherCondition weatherType='sunny'/>
         </div>
     );
 };
