@@ -40,11 +40,10 @@ function App() {
     );
 
   useEffect(() => {
-    const getWeatherInArea = async () => {
-        const weatherData = await weatherService.getWeatherInArea(
+    const getCurrentWeatherInArea = async () => {
+        const weatherData = await weatherService.getCurrentWeatherInArea(
             (coordinates?.latitude ? coordinates.latitude : '0'),
-            (coordinates?.longitude ? coordinates.longitude : '0'),
-            ['minutely']
+            (coordinates?.longitude ? coordinates.longitude : '0')
           );
         console.log('WEATHER: ', weatherData);
         const cityFromCoordinates = await weatherService.getCityFromLocation(weatherData?.lat, weatherData?.lon);
@@ -52,7 +51,7 @@ function App() {
         setCity(cityFromCoordinates);
     }
 
-    getWeatherInArea();
+    getCurrentWeatherInArea();
   }, [coordinates?.latitude, coordinates?.longitude]);
 
   return (

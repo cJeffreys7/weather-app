@@ -8,10 +8,10 @@ import * as weatherService from '../../services/weatherService';
 
 const Home = ({ weatherInfo, city }) => {
 
-    const currentTemperature = weatherService.getFahrenheitTemperature(weatherInfo?.current?.temp);
-    const dailyHigh = weatherService.getFahrenheitTemperature(weatherInfo?.daily[0]?.temp?.max);
-    const dailyLow = weatherService.getFahrenheitTemperature(weatherInfo?.daily[0]?.temp?.min);
-    const weatherCondition = weatherService.getWeatherConditionFromWeatherCode(weatherInfo?.daily[0]?.weather[0]?.icon);
+    const currentTemperature = weatherService.getFahrenheitTemperature(weatherInfo?.main?.temp);
+    const dailyHigh = weatherService.getFahrenheitTemperature(weatherInfo?.main?.temp_max);
+    const dailyLow = weatherService.getFahrenheitTemperature(weatherInfo?.main?.temp_min);
+    const weatherCondition = weatherService.getWeatherConditionFromWeatherCode(weatherInfo?.weather[0]?.icon);
 
     return (
         <div>

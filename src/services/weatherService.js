@@ -1,6 +1,10 @@
-const getWeatherInArea = async (latitude, longitude, part) => {
-    return await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=${part}&appid=${process.env.REACT_APP_WEATHER_API_KEY}`).then(res => res.json());
+const getCurrentWeatherInArea = async (latitude, longitude) => {
+    return await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${process.env.REACT_APP_WEATHER_API_KEY}`).then(res => res.json());
 }
+
+// const getWeatherInArea = async (latitude, longitude, part) => {
+//     return await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=${part}&appid=${process.env.REACT_APP_WEATHER_API_KEY}`).then(res => res.json());
+// }
 
 const getWeatherConditionFromWeatherCode = (weatherCode) => {
     switch(weatherCode) {
@@ -13,13 +17,13 @@ const getWeatherConditionFromWeatherCode = (weatherCode) => {
         case '02n':
             return 'partly_cloudy_night';
         case '03d':
-            return 'cloudy-windy';
+            return 'cloudy_windy';
         case '03n':
             return 'cloudy_windy';
         case '04d':
-            return 'cloudy-windy';
+            return 'cloudy_windy';
         case '04n':
-            return 'cloudy-windy';
+            return 'cloudy_windy';
         case '09d':
             return 'light_rain';
         case '09n':
@@ -53,12 +57,12 @@ const getFahrenheitTemperature = (kelvinTemperature) => {
 const getCityFromLocation = async (latitude, longitude) => {
     const result = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`)
     .then(res => res.json());
-    // console.log('CITY RESULT: ', result);
     return result.locality;
 }
 
 export {
-    getWeatherInArea,
+    getCurrentWeatherInArea,
+    // getWeatherInArea,
     getWeatherConditionFromWeatherCode,
     getFahrenheitTemperature,
     getCityFromLocation
