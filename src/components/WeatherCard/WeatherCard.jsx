@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import WeatherCondition from '../WeatherCondition/WeatherCondition';
 
 const WeatherCard = ({ city, temperature, weatherCondition, high, low }) => {
+
     return (
         <Box sx={{ minWidth: 275 }}>
             <Card variant="outlined">
@@ -17,13 +18,13 @@ const WeatherCard = ({ city, temperature, weatherCondition, high, low }) => {
                     {city ? city : 'City'}
                     </Typography>
                     <Typography variant="h5" component="div">
-                    {temperature ? temperature : 'Current Temperature'}
+                    {temperature ? <span>{temperature} &#x2109;</span> : 'Current Temperature'}
                     </Typography>
                     {weatherCondition ? <WeatherCondition weatherType={weatherCondition} /> : 'Weather Condition'}
                     <Typography variant="body2">
-                    {high ? high : 'High for the Day'}
+                    {high ? <span>{high} &#x2109;</span> : 'High for the Day'}
                     <br />
-                    {low ? low : 'Low for the Day'}
+                    {low ? <span>{low} &#x2109;</span> : 'Low for the Day'}
                     </Typography>
                 </CardContent>
                 <CardActions>

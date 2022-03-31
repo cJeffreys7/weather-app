@@ -1,34 +1,20 @@
-import React, { useEffect } from 'react';
-import CardComponent from '../../components/WeatherCard/WeatherCard';
-import WeatherCondition from '../../components/WeatherCondition/WeatherCondition';
-import animationData from '../../lotties/sunny.json';
+import React from 'react';
+
+// components
+import WeatherCard from '../../components/WeatherCard/WeatherCard';
 
 // services
 import * as weatherService from '../../services/weatherService';
 
-const Home = () => {
-    useEffect(() => {
-        const getWeatherInArea = async () => {
-            const weatherInfo = await weatherService.getWeatherInArea(32.776665, -96.796989, ['minutely']);
-            console.log('WEATHER: ', weatherInfo);
-        }
+const Home = ({ weatherInfo, city }) => {
 
-        getWeatherInArea();
-    }, []);
-
-    const defaultOptions = {
-        loop: true,
-        autoplay: true,
-        animationData: animationData,
-        rendererSettings: {
-            preserveAspectRatio: 'xMidYMid slice'
-        }
-    };
+    const currentTemperature = weatherService.getFahrenheitTemperature(weatherInfo?.current?.temp);
+    const dailyHigh = weatherService.getFahrenheitTemperature(weatherInfo?.daily[0]?.temp?.max);
+    const dailyLow = weatherService.getFahrenheitTemperature(weatherInfo?.daily[0]?.temp?.min);
 
     return (
         <div>
-            Weather App
-            <CardComponent weatherCondition='heavy_thunderstorm'/>
+            <WeatherCard city={city} weatherCondition='heavy_thunderstorm' temperature={currentTemperature} high={dailyHigh} low={dailyLow} />
         </div>
     );
 };
