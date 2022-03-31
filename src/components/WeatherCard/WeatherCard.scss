@@ -1,0 +1,11 @@
+.MuiCardContent-root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0px !important;
+    width: 100%;
+
+    .MuiTypography-root {
+        width: 80%;
+    }
+}

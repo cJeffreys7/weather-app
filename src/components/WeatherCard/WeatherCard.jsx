@@ -8,8 +8,9 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Skeleton from '@mui/material/Skeleton';
-
 import WeatherCondition from '../WeatherCondition/WeatherCondition';
+
+import './WeatherCard.scss'
 
 const WeatherCard = ({ city, temperature, weatherCondition, high, low }) => {
 
