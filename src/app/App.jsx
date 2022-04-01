@@ -8,21 +8,37 @@ import HourlyWeather from '../pages/HourlyWeather/HourlyWeather';
 
 // services
 import * as locationService from '../services/locationService';
+import * as tokenService from '../services/tokenService';
 
 import './App.scss';
 
 function App() {
-  const [coordinates, setCoordinates] = useState(null);
-  const [city, setCity] = useState(null);
+  const [locationData, setLocationData] = useState({
+    coordinates: null,
+    country: null,
+    city: null
+  })
 
   useEffect(() => {
     const getDeviceCurrentLocation = async () => {
       
-      const getDeviceLocation = async (location) => {
-        if (location.coords) {
-          setCoordinates(location.coords);
-          const cityFromCoordinates = await locationService.getCityFromLocation(location?.coords?.latitude, location?.coords?.longitude);
-          setCity(cityFromCoordinates);
+      const getDeviceLocation = async (deviceCoordinates) => {
+        console.log('COORDINATES: ', deviceCoordinates);
+        if (deviceCoordinates.coords) {
+          const formattedCoordinates = {
+            latitude: deviceCoordinates.coords.latitude,
+            longitude: deviceCoordinates.coords.longitude
+          }
+          const location = await locationService.getLocationFromCoordinates(formattedCoordinates);
+          console.warn('LOCATION: ', location);
+          const cityFromCoordinates = location.locality;
+          const countryFromCoordinates = location.countryCode;
+          tokenService.setToken('coordinates_token', `$${deviceCoordinates.coords.latitude},${deviceCoordinates.coords.longitude}`)
+          setLocationData({
+            coordinates: formattedCoordinates,
+            country: countryFromCoordinates,
+            city: cityFromCoordinates
+          })
         }
     
         // console.log('Your current position is:');
@@ -52,12 +68,14 @@ function App() {
     getDeviceCurrentLocation();
   }, []);
 
+  const { city } = locationData;
+
   return (
     <div className='App'>
       <NavBar />
       <Routes>
-        <Route path='/home' element={<Home city={city} coordinates={coordinates} />} />
-        <Route path='/hourly-weather' element={<HourlyWeather city={city} coordinates={coordinates} />} />
+        <Route path='/home' element={<Home />} />
+        <Route path='/hourly-weather' element={<HourlyWeather city={city} />} />
       </Routes>
     </div>
   );
