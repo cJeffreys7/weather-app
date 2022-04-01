@@ -5,14 +5,8 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
 
-export default function DropdownSelect({ label, name, options, onChange }) {
-    const [selection, setSelection] = useState('');
+export default function DropdownSelect({ label, name, value, options, onChange }) {
     const [open, setOpen] = useState(false);
-
-    const handleChange = e => {
-        setSelection(e.target.value);
-        onChange(e);
-    };
 
     const handleClose = () => {
         setOpen(false);
@@ -32,12 +26,12 @@ export default function DropdownSelect({ label, name, options, onChange }) {
                     open={open}
                     onClose={handleClose}
                     onOpen={handleOpen}
-                    value={selection}
+                    value={value}
                     label={label}
-                    onChange={handleChange}
+                    onChange={onChange}
                 >
-                    <MenuItem value="">
-                        <em>None</em>
+                    <MenuItem value={value}>
+                        <em>{value}</em>
                     </MenuItem>
                     {options?.map(option => 
                         <MenuItem value={Object.values(option)[0]} key={Object.values(option)[0]}>{Object.values(option)[0]}</MenuItem>

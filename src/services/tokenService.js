@@ -2,7 +2,6 @@ import { Buffer } from 'buffer';
 
 const setToken = (tokenName, token) => {
     if (token) {
-        console.log('SETTING TOKEN: ', token);
         localStorage.setItem(tokenName, token);
     } else {
         console.warn('NO TOKEN TO SET');
@@ -23,6 +22,8 @@ const getToken = (tokenName) => {
                 removeToken(tokenName);
                 token = null;
             };
+        } else {
+            token = token.substring(1);
         }
     } else {
         removeToken(tokenName);
@@ -43,7 +44,6 @@ const getBearerToken = (tokenName) => {
 
 const removeToken = (tokenName) => {
     localStorage.removeItem(tokenName);
-    console.log('REMOVING TOKEN: ', tokenName);
 }
 
 export {

@@ -4,7 +4,6 @@ import * as tokenService from '../services/tokenService'
 const getLocationFromCoordinates = async (coordinates) => {
     const latitude = coordinates.latitude;
     const longitude = coordinates.longitude;
-    console.log('GETTING LOCATION FROM: ', latitude, longitude);
     const result = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`)
     .then(res => res.json());
     return result;
@@ -13,7 +12,6 @@ const getLocationFromCoordinates = async (coordinates) => {
 const getCityFromLocation = async (coordinates) => {
     const latitude = coordinates.latitude;
     const longitude = coordinates.longitude;
-    console.log('GETTING CITY FROM: ', latitude, longitude);
     const result = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`)
     .then(res => res.json());
     return result.locality;
@@ -26,9 +24,7 @@ const getLocationFromCity = async (city, state) => {
 }
 
 const getCountryNameFromCountryCode = async (countryCode) => {
-    console.log('SEARCHING FOR COUNTRY NAME FROM CODE: ', countryCode);
     const authToken = await getAuthTokenForCountryStateCity();
-    console.log('AUTH TOKEN FOR COUNTRY CODE: ', authToken);
     const result = await fetch(`https://www.universal-tutorial.com/api/countries/`, {
         method: 'GET',
         headers: {
@@ -38,7 +34,6 @@ const getCountryNameFromCountryCode = async (countryCode) => {
     })
     .then(res => res.json())
     .catch(err => console.error('ERROR: ', err));
-    console.log('COUNTRIES: ', result);
     let countryName;
     result.every(country => {
         if (country.country_short_name === countryCode) {
@@ -51,9 +46,7 @@ const getCountryNameFromCountryCode = async (countryCode) => {
 
 const getStatesOfCountry = async (countryCode) => {
     const country = await getCountryNameFromCountryCode(countryCode);
-    console.log('COUNTRY FROM COUNTRY CODE: ', country);
     const authToken = await getAuthTokenForCountryStateCity();
-    console.log('AUTH TOKEN FOR STATES OF COUNTRY: ', authToken);
     const result = await fetch(`https://www.universal-tutorial.com/api/states/${country}`, {
         method: 'GET',
         headers: {
@@ -81,10 +74,7 @@ const getCitiesOfState = async (state) => {
 }
 
 const getAuthTokenForCountryStateCity = async () => {
-    if (tokenService.getBearerToken('auth_token')) {
-        console.log('FOUND AUTH TOKEN: ', tokenService.getBearerToken('auth_token'));
-    } else {
-        console.log('DID NOT FIND AUTH TOKEN');
+    if (!tokenService.getBearerToken('auth_token')) {
         const result = await fetch(`https://www.universal-tutorial.com/api/getaccesstoken`, {
             method: 'GET',
             headers: {

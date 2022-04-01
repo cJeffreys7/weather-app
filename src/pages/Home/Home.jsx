@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 // components
 import WeatherCard from '../../components/WeatherCard/WeatherCard';
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
 // services
@@ -42,7 +41,7 @@ const Home = () => {
         const coordinates = tokenService.getToken('coordinates_token')?.split(',');
         if (coordinates) {
             const formattedCoordinates = {
-                latitude: parseFloat(coordinates[0].substring(1)),
+                latitude: parseFloat(coordinates[0]),
                 longitude: parseFloat(coordinates[1])
             }
             setFormData({
@@ -68,6 +67,7 @@ const Home = () => {
             latitude: result[0].lat,
             longitude: result[0].lon
         }
+        tokenService.setToken('coordinates_token', `$${coordinates.latitude},${coordinates.longitude}`)
         setFormData({
             ...formData,
             searchCoordinates: coordinates
@@ -104,18 +104,18 @@ const Home = () => {
         const getStatesOfCountry = async (countryCode) => {
             if (countryCode) {
                 const states = await locationService.getStatesOfCountry(countryCode);
-                console.log('STATES: ', states);
                 setSearchOptions({
                     ...searchOptions,
                     stateOptions: states
                 })
             }
         }
-        console.log('SEARCH COUNTRY: ', searchCountry);
         getStatesOfCountry(searchCountry);
     }, [searchCountry])
 
     useEffect(() => {
+        
+
         const getCurrentWeatherInArea = async (coordinates) => {
             const weatherData = await weatherService.getCurrentWeatherInArea(
                 (coordinates?.latitude ? coordinates.latitude : '0'),
@@ -125,33 +125,31 @@ const Home = () => {
             setCurrentWeather(weatherData);
         }
 
-        const getLocationFromCoordinates = async (coordinates) => {
+        const updateLocationFromCoordinates = async (coordinates) => {
             const location = await locationService.getLocationFromCoordinates(coordinates);
-            console.log('LOCATION FROM COORDINATES: ', location);
+            console.log('UPDATED LOCATION: ', location);
+            const updatedCountry = location.countryCode;
+            // const updatedState = location.localityInfo.administrative[1].name;
+            const updatedCity = location.locality;
+
             setFormData({
                 ...formData,
-                searchCountry: location.countryCode
+                displayCity: updatedCity,
+                // searchState: updatedState,
+                searchCountry: updatedCountry
             })
         }
 
-        const getCityFromLocation = async (coordinates) => {
-            const city = await locationService.getCityFromLocation(coordinates);
-            setFormData({
-                ...formData,
-                displayCity: city
-            })
-        }
-
-        console.log('GET COORDINATES: ', searchCoordinates);
         if (searchCoordinates) {
+            updateLocationFromCoordinates(searchCoordinates);
             getCurrentWeatherInArea(searchCoordinates);
-            getLocationFromCoordinates(searchCoordinates);
-            getCityFromLocation(searchCoordinates);
+            console.log('UPDATE LOCATION FROM COORDINATES: ', searchCoordinates);
         }
-        setFormData({
-            ...formData,
-            displayCity: formData.searchCity
-        })
+        // setFormData({
+        //     ...formData,
+        //     searchCity: formData.displayCity
+        // })
+        
     }, [searchCoordinates]);
 
     const currentTemperature = weatherService.getFahrenheitTemperature(currentWeather?.main?.temp);
@@ -175,15 +173,17 @@ const Home = () => {
             />
             <form className='city-search-form'>
                 <DropdownSelect
-                    label='City'
-                    name='searchCity'
-                    options={cityOptions}
+                    label='State'
+                    name='searchState'
+                    value={searchState}
+                    options={stateOptions}
                     onChange={handleChange}
                 />
                 <DropdownSelect
-                    label='State'
-                    name='searchState'
-                    options={stateOptions}
+                    label='City'
+                    name='searchCity'
+                    value={searchCity}
+                    options={cityOptions}
                     onChange={handleChange}
                 />
                 <Button

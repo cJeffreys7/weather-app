@@ -33,7 +33,7 @@ function App() {
           console.warn('LOCATION: ', location);
           const cityFromCoordinates = location.locality;
           const countryFromCoordinates = location.countryCode;
-          tokenService.setToken('coordinates_token', `$${deviceCoordinates.coords.latitude},${deviceCoordinates.coords.longitude}`)
+          tokenService.setToken('coordinates_token', `$${deviceCoordinates.coords.latitude},${deviceCoordinates.coords.longitude}`);
           setLocationData({
             coordinates: formattedCoordinates,
             country: countryFromCoordinates,
@@ -75,7 +75,7 @@ function App() {
       <NavBar />
       <Routes>
         <Route path='/home' element={<Home />} />
-        <Route path='/hourly-weather' element={<HourlyWeather city={city} />} />
+        <Route path='/hourly-weather' element={<HourlyWeather />} />
       </Routes>
     </div>
   );

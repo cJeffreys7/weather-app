@@ -3,11 +3,41 @@ import WeatherCard from '../../components/WeatherCard/WeatherCard';
 
 // services
 import * as weatherService from '../../services/weatherService';
+import * as locationService from '../../services/locationService';
+import * as tokenService from '../../services/tokenService';
+
+// hooks
+import useInterval from '../../hooks/useInterval';
 
 import './HourlyWeather.scss';
 
-const HourlyWeather = ({ city, coordinates }) => {
+const HourlyWeather = () => {
     const [hourlyWeather, setHourlyWeather] = useState(null);
+    const [coordinates, setCoordinates] = useState(null);
+    const [city, setCity] = useState(null);
+
+    const getCurrentCoordinates = async () => {
+        const updatedCoordinates = tokenService.getToken('coordinates_token')?.split(',');
+        console.warn('UPDATED COORDINATES: ', updatedCoordinates);
+        if (updatedCoordinates) {
+            const formattedCoordinates = {
+                latitude: parseFloat(updatedCoordinates[0]),
+                longitude: parseFloat(updatedCoordinates[1])
+            }
+            setCoordinates(formattedCoordinates);
+            const updatedCity = await locationService.getCityFromLocation(formattedCoordinates);
+            setCity(updatedCity);
+        }
+    }
+
+    useInterval(() => {
+        getCurrentCoordinates();
+        console.warn('ANOTHER ATTEMPT TO GET COORDINATES');
+    }, 1000, coordinates?.length === 0);
+
+    useEffect(() => {
+        getCurrentCoordinates();
+    }, [])
 
     useEffect(() => {
         const getHourlyWeatherForNext48Hours = async () => {
@@ -28,7 +58,7 @@ const HourlyWeather = ({ city, coordinates }) => {
     return (
         <div className='hourly-weather-wrapper'>
             <h1>
-                Hourly Weather
+                {city} Hourly Weather
             </h1>
             <div className="weather-cards">
                 {hourlyWeather?.map((hourWeather, index) => {
