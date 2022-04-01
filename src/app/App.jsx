@@ -13,31 +13,13 @@ import * as tokenService from '../services/tokenService';
 import './App.scss';
 
 function App() {
-  const [locationData, setLocationData] = useState({
-    coordinates: null,
-    country: null,
-    city: null
-  })
 
   useEffect(() => {
     const getDeviceCurrentLocation = async () => {
       
       const getDeviceLocation = async (deviceCoordinates) => {
         if (deviceCoordinates.coords) {
-          const formattedCoordinates = {
-            latitude: deviceCoordinates.coords.latitude,
-            longitude: deviceCoordinates.coords.longitude
-          }
-          const location = await locationService.getLocationFromCoordinates(formattedCoordinates);
-          console.log('DEVICE LOCATION: ', location);
-          const cityFromCoordinates = location.locality;
-          const countryFromCoordinates = location.countryCode;
           tokenService.setToken('coordinates_token', `$${deviceCoordinates.coords.latitude},${deviceCoordinates.coords.longitude}`);
-          setLocationData({
-            coordinates: formattedCoordinates,
-            country: countryFromCoordinates,
-            city: cityFromCoordinates
-          })
         }
     
         // console.log('Your current position is:');
@@ -66,8 +48,6 @@ function App() {
 
     getDeviceCurrentLocation();
   }, []);
-
-  const { city } = locationData;
 
   return (
     <div className='App'>

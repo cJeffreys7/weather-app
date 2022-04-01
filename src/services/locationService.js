@@ -38,7 +38,7 @@ const getCountries = async () => {
 }
 
 const getCountryNameFromCountryCode = async (countryCode) => {
-    const result = getCountries();
+    const result = await getCountries();
     let countryName;
     if (result?.length > 0) {
         result.every(country => {
@@ -48,11 +48,19 @@ const getCountryNameFromCountryCode = async (countryCode) => {
             return !countryName;
         })
         return countryName;
+    } else {
+        return null
     }
 }
 
 const getStatesOfCountry = async (countryCode) => {
-    const country = await getCountryNameFromCountryCode(countryCode);
+    let country;
+    // TODO: Possible loop occuring here
+    if (countryCode.length < 3) {
+        country = await getCountryNameFromCountryCode(countryCode);
+    } else {
+        country = countryCode;
+    }
     const authToken = await getAuthTokenForCountryStateCity();
     const result = await fetch(`https://www.universal-tutorial.com/api/states/${country}`, {
         method: 'GET',
@@ -63,7 +71,7 @@ const getStatesOfCountry = async (countryCode) => {
     })
     .then(res => res.json())
     .catch(err => console.error('ERROR: ', err));
-    return result;
+    return result?.length ? result : null;
 }
 
 const getCitiesOfState = async (state) => {
@@ -77,7 +85,7 @@ const getCitiesOfState = async (state) => {
     })
     .then(res => res.json())
     .catch(err => console.error('ERROR: ', err));
-    return result;
+    return result?.length ? result : null;
 }
 
 const getAuthTokenForCountryStateCity = async () => {

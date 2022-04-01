@@ -15,6 +15,22 @@ import useInterval from '../../hooks/useInterval';
 import './Home.scss';
 import DropdownSelect from '../../components/DropdownSelect/DropdownSelect';
 
+const getCurrentCoordinates = () => {
+    const coordinates = tokenService.getToken('coordinates_token')?.split(',');
+    if (coordinates) {
+        const formattedCoordinates = {
+            latitude: parseFloat(coordinates[0]),
+            longitude: parseFloat(coordinates[1])
+        }
+        return formattedCoordinates;
+    }
+}
+
+const getCountries = async () => {
+    const countries = await locationService.getCountries();
+    return countries;
+}
+
 const Home = () => {
     const [currentWeather, setCurrentWeather] = useState(null);
     const [formData, setFormData] = useState({
@@ -29,7 +45,6 @@ const Home = () => {
         stateOptions: [],
         cityOptions: []
     });
-
     const {
         searchCity,
         displayCity,
@@ -38,36 +53,50 @@ const Home = () => {
         searchCoordinates
     } = formData;
 
-    const getCurrentCoordinates = () => {
-        const coordinates = tokenService.getToken('coordinates_token')?.split(',');
-        if (coordinates) {
-            const formattedCoordinates = {
-                latitude: parseFloat(coordinates[0]),
-                longitude: parseFloat(coordinates[1])
-            }
-            setFormData({
-                ...formData,
-                searchCoordinates: formattedCoordinates
-            })
-        }
-    }
+    const { countryOptions, stateOptions, cityOptions } = searchOptions;
 
     useInterval(() => {
-        getCurrentCoordinates();
-    }, 1000, searchCoordinates.length === 0);
+        const getCurrentCountry = async () => {
+            console.log('CURRENT COORDINATES BEFORE UPDATE: ', searchCoordinates);
+            if (searchCoordinates.length === 0) {
+                const coordinates = getCurrentCoordinates();
+                setFormData({
+                    ...formData,
+                    searchCoordinates: coordinates
+                })
+            }
+            console.warn('CURRENT COUNTRIES BEFORE UPDATE: ', searchOptions.countryOptions);
+            if (countryOptions.length === 0) {
+                const countries = await getCountries();
+                setSearchOptions({
+                        ...searchOptions,
+                        countryOptions: countries
+                })
+            }
+        }
+
+        getCurrentCountry();
+        console.log('ATTEMPTING TO UPDATE COORDINATES, CONDITIO: ', searchCoordinates.length === 0);
+        console.log('ATTEMPTING TO UPDATE COUNTRIES, CONDITION: ', countryOptions.length === 0);
+    }, 1000, searchCoordinates.length === 0 && searchOptions.countryOptions.length === 0);
 
     useEffect(() => {
-        const getCountries = async () => {
-            const countries = await locationService.getCountries();
-            console.log('COUNTRIES: ', countries);
+        const getCurrentCountry = async () => {
+            const countries = await getCountries();
+            console.warn('COUNTRIES: ', countries);
             setSearchOptions({
-                ...searchOptions,
-                countryOptions: countries
+                    ...searchOptions,
+                    countryOptions: countries
+            })
+            const coordinates = getCurrentCoordinates();
+            console.log('CURRENT COORDINATES: ', coordinates);
+            setFormData({
+                ...formData,
+                searchCoordinates: coordinates
             })
         }
-        
-        getCurrentCoordinates();
-        getCountries();
+
+        getCurrentCountry();
     }, []);
 
     const handleSubmit = async () => {
@@ -88,6 +117,7 @@ const Home = () => {
             ...formData,
             [e.target.name]: e.target.value
         });
+        console.log(`CHANGING STATE ${e.target.name}: ${e.target.value}`);
     }
 
     useEffect(() => {
@@ -98,6 +128,7 @@ const Home = () => {
                     searchCity: '',
                 })
                 const cities = await locationService.getCitiesOfState(state);
+                console.log(`CITIES OF ${state}: `, cities);
                 setSearchOptions({
                     ...searchOptions,
                     cityOptions: cities
@@ -117,6 +148,11 @@ const Home = () => {
                     ...searchOptions,
                     stateOptions: states
                 })
+                setFormData({
+                    ...formData,
+                    searchState: '',
+                    searchCity: ''
+                })
             }
         }
         getStatesOfCountry(searchCountry);
@@ -131,13 +167,14 @@ const Home = () => {
                 (coordinates?.longitude ? coordinates.longitude : '0')
             );
             // console.log('WEATHER: ', weatherData);
-            setCurrentWeather(weatherData);
+            if (weatherData) {
+                setCurrentWeather(weatherData);
+            }
         }
 
         const updateLocationFromCoordinates = async (coordinates) => {
             const location = await locationService.getLocationFromCoordinates(coordinates);
-            // console.log('UPDATED LOCATION: ', location);
-            const updatedCountry = location.countryCode;
+            const updatedCountry = await locationService.getCountryNameFromCountryCode(location.countryCode);
             const updatedCity = location.locality;
             // const updatedState = location.localityInfo.administrative[1].name;
 
@@ -151,7 +188,7 @@ const Home = () => {
 
         if (searchCoordinates) {
             updateLocationFromCoordinates(searchCoordinates);
-            getCurrentWeatherInArea(searchCoordinates);
+            // getCurrentWeatherInArea(searchCoordinates);
         }
         
     }, [searchCoordinates]);
@@ -162,8 +199,6 @@ const Home = () => {
     const weatherCondition = weatherService.getWeatherConditionFromWeatherCode(currentWeather?.weather[0]?.icon);
 
     const isFormInvalid = !(searchCity && searchState);
-
-    const { countryOptions, stateOptions, cityOptions } = searchOptions;
 
     return (
         <div className='home-wrapper'>
@@ -185,20 +220,24 @@ const Home = () => {
                     displayIndex={0}
                     onChange={handleChange}
                 />
-                <DropdownSelect
-                    label='State'
-                    name='searchState'
-                    value={searchState}
-                    options={stateOptions}
-                    onChange={handleChange}
-                />
-                <DropdownSelect
-                    label='City'
-                    name='searchCity'
-                    value={searchCity}
-                    options={cityOptions}
-                    onChange={handleChange}
-                />
+                {stateOptions && 
+                    <DropdownSelect
+                        label='State'
+                        name='searchState'
+                        value={searchState}
+                        options={stateOptions}
+                        onChange={handleChange}
+                    />
+                }
+                {cityOptions && 
+                    <DropdownSelect
+                        label='City'
+                        name='searchCity'
+                        value={searchCity}
+                        options={cityOptions}
+                        onChange={handleChange}
+                    />
+                }
                 <Button
                     onClick={handleSubmit}
                     disabled={isFormInvalid}

@@ -33,13 +33,15 @@ export default function DropdownSelect({ label, name, value, options, valueIndex
                     <MenuItem value={value}>
                         <em>{value}</em>
                     </MenuItem>
-                    {options?.map(option => 
-                        <MenuItem
-                            value={Object.values(option)[valueIndex ? valueIndex : 0]}
-                            key={Object.values(option)[valueIndex ? valueIndex : 0]}>
-                                {Object.values(option)[displayIndex ? displayIndex : 0]}
-                            </MenuItem>
-                    )}
+                    {options?.length > 0 && 
+                        options?.map(option => 
+                            <MenuItem
+                                value={Object.values(option)[valueIndex ? valueIndex : 0]}
+                                key={Object.values(option)[valueIndex ? valueIndex : 0]}>
+                                    {Object.values(option)[displayIndex ? displayIndex : 0]}
+                                </MenuItem>
+                        )
+                    }
                 </Select>
             </FormControl>
         </div>
