@@ -23,7 +23,7 @@ const getLocationFromCity = async (city, state) => {
     return result;
 }
 
-const getCountryNameFromCountryCode = async (countryCode) => {
+const getCountries = async () => {
     const authToken = await getAuthTokenForCountryStateCity();
     const result = await fetch(`https://www.universal-tutorial.com/api/countries/`, {
         method: 'GET',
@@ -34,14 +34,21 @@ const getCountryNameFromCountryCode = async (countryCode) => {
     })
     .then(res => res.json())
     .catch(err => console.error('ERROR: ', err));
+    return result;
+}
+
+const getCountryNameFromCountryCode = async (countryCode) => {
+    const result = getCountries();
     let countryName;
-    result.every(country => {
-        if (country.country_short_name === countryCode) {
-            countryName = country.country_name;
-        }
-        return !countryName;
-    })
-    return countryName;
+    if (result?.length > 0) {
+        result.every(country => {
+            if (country.country_short_name === countryCode) {
+                countryName = country.country_name;
+            }
+            return !countryName;
+        })
+        return countryName;
+    }
 }
 
 const getStatesOfCountry = async (countryCode) => {
@@ -92,6 +99,7 @@ export {
     getLocationFromCoordinates,
     getCityFromLocation,
     getLocationFromCity,
+    getCountries,
     getCountryNameFromCountryCode,
     getStatesOfCountry,
     getCitiesOfState,

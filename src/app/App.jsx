@@ -23,14 +23,13 @@ function App() {
     const getDeviceCurrentLocation = async () => {
       
       const getDeviceLocation = async (deviceCoordinates) => {
-        console.log('COORDINATES: ', deviceCoordinates);
         if (deviceCoordinates.coords) {
           const formattedCoordinates = {
             latitude: deviceCoordinates.coords.latitude,
             longitude: deviceCoordinates.coords.longitude
           }
           const location = await locationService.getLocationFromCoordinates(formattedCoordinates);
-          console.warn('LOCATION: ', location);
+          console.log('DEVICE LOCATION: ', location);
           const cityFromCoordinates = location.locality;
           const countryFromCoordinates = location.countryCode;
           tokenService.setToken('coordinates_token', `$${deviceCoordinates.coords.latitude},${deviceCoordinates.coords.longitude}`);

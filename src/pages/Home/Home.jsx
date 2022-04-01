@@ -25,6 +25,7 @@ const Home = () => {
         searchCoordinates: ''
     });
     const [searchOptions, setSearchOptions] = useState({
+        countryOptions: [],
         stateOptions: [],
         cityOptions: []
     });
@@ -53,12 +54,20 @@ const Home = () => {
 
     useInterval(() => {
         getCurrentCoordinates();
-        console.warn('ANOTHER ATTEMPT TO GET COORDINATES');
     }, 1000, searchCoordinates.length === 0);
 
     useEffect(() => {
-
+        const getCountries = async () => {
+            const countries = await locationService.getCountries();
+            console.log('COUNTRIES: ', countries);
+            setSearchOptions({
+                ...searchOptions,
+                countryOptions: countries
+            })
+        }
+        
         getCurrentCoordinates();
+        getCountries();
     }, []);
 
     const handleSubmit = async () => {
@@ -89,7 +98,6 @@ const Home = () => {
                     searchCity: '',
                 })
                 const cities = await locationService.getCitiesOfState(state);
-                console.log('CITIES: ', cities);
                 setSearchOptions({
                     ...searchOptions,
                     cityOptions: cities
@@ -104,6 +112,7 @@ const Home = () => {
         const getStatesOfCountry = async (countryCode) => {
             if (countryCode) {
                 const states = await locationService.getStatesOfCountry(countryCode);
+                console.log(`STATES OF ${countryCode}: `, states);
                 setSearchOptions({
                     ...searchOptions,
                     stateOptions: states
@@ -121,34 +130,29 @@ const Home = () => {
                 (coordinates?.latitude ? coordinates.latitude : '0'),
                 (coordinates?.longitude ? coordinates.longitude : '0')
             );
-            console.log('WEATHER: ', weatherData);
+            // console.log('WEATHER: ', weatherData);
             setCurrentWeather(weatherData);
         }
 
         const updateLocationFromCoordinates = async (coordinates) => {
             const location = await locationService.getLocationFromCoordinates(coordinates);
-            console.log('UPDATED LOCATION: ', location);
+            // console.log('UPDATED LOCATION: ', location);
             const updatedCountry = location.countryCode;
-            // const updatedState = location.localityInfo.administrative[1].name;
             const updatedCity = location.locality;
+            // const updatedState = location.localityInfo.administrative[1].name;
 
             setFormData({
                 ...formData,
                 displayCity: updatedCity,
-                // searchState: updatedState,
                 searchCountry: updatedCountry
+                // searchState: updatedState,
             })
         }
 
         if (searchCoordinates) {
             updateLocationFromCoordinates(searchCoordinates);
             getCurrentWeatherInArea(searchCoordinates);
-            console.log('UPDATE LOCATION FROM COORDINATES: ', searchCoordinates);
         }
-        // setFormData({
-        //     ...formData,
-        //     searchCity: formData.displayCity
-        // })
         
     }, [searchCoordinates]);
 
@@ -159,7 +163,7 @@ const Home = () => {
 
     const isFormInvalid = !(searchCity && searchState);
 
-    const { stateOptions, cityOptions } = searchOptions;
+    const { countryOptions, stateOptions, cityOptions } = searchOptions;
 
     return (
         <div className='home-wrapper'>
@@ -172,6 +176,15 @@ const Home = () => {
                 fullCard={true}
             />
             <form className='city-search-form'>
+                <DropdownSelect
+                    label='Country'
+                    name='searchCountry'
+                    value={searchCountry}
+                    options={countryOptions}
+                    valueIndex={1}
+                    displayIndex={0}
+                    onChange={handleChange}
+                />
                 <DropdownSelect
                     label='State'
                     name='searchState'

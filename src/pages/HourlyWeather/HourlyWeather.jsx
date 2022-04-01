@@ -18,7 +18,6 @@ const HourlyWeather = () => {
 
     const getCurrentCoordinates = async () => {
         const updatedCoordinates = tokenService.getToken('coordinates_token')?.split(',');
-        console.warn('UPDATED COORDINATES: ', updatedCoordinates);
         if (updatedCoordinates) {
             const formattedCoordinates = {
                 latitude: parseFloat(updatedCoordinates[0]),
@@ -32,7 +31,6 @@ const HourlyWeather = () => {
 
     useInterval(() => {
         getCurrentCoordinates();
-        console.warn('ANOTHER ATTEMPT TO GET COORDINATES');
     }, 1000, coordinates?.length === 0);
 
     useEffect(() => {
@@ -47,9 +45,6 @@ const HourlyWeather = () => {
                 ['current', 'minutely', 'daily', 'alerts']
             );
             setHourlyWeather(weatherData.hourly);
-            // weatherData.hourly.forEach(hourlyWeather => {
-            //     console.log(new Date(parseInt(hourlyWeather.dt + "000")).toLocaleTimeString());
-            // })
         }
 
         getHourlyWeatherForNext48Hours();
