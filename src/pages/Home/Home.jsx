@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 // components
 import WeatherCard from '../../components/WeatherCard/WeatherCard';
+import DropdownSelect from '../../components/DropdownSelect/DropdownSelect';
 import Button from '@mui/material/Button';
 
 // services
@@ -13,7 +14,6 @@ import * as tokenService from '../../services/tokenService';
 import useInterval from '../../hooks/useInterval';
 
 import './Home.scss';
-import DropdownSelect from '../../components/DropdownSelect/DropdownSelect';
 
 const getCurrentCoordinates = () => {
     const coordinates = tokenService.getToken('coordinates_token')?.split(',');
@@ -188,7 +188,7 @@ const Home = () => {
 
         if (searchCoordinates) {
             updateLocationFromCoordinates(searchCoordinates);
-            // getCurrentWeatherInArea(searchCoordinates);
+            getCurrentWeatherInArea(searchCoordinates);
         }
         
     }, [searchCoordinates]);

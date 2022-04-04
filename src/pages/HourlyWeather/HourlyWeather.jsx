@@ -24,8 +24,8 @@ const HourlyWeather = () => {
                 longitude: parseFloat(updatedCoordinates[1])
             }
             setCoordinates(formattedCoordinates);
-            const updatedCity = await locationService.getCityFromLocation(formattedCoordinates);
-            setCity(updatedCity);
+            const updatedLocation = await locationService.getLocationFromCoordinates(formattedCoordinates);
+            setCity(updatedLocation.locality);
         }
     }
 

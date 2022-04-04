@@ -9,14 +9,6 @@ const getLocationFromCoordinates = async (coordinates) => {
     return result;
 }
 
-const getCityFromLocation = async (coordinates) => {
-    const latitude = coordinates.latitude;
-    const longitude = coordinates.longitude;
-    const result = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`)
-    .then(res => res.json());
-    return result.locality;
-}
-
 const getLocationFromCity = async (city, state) => {
     const result = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city},${state}&appid=${process.env.REACT_APP_WEATHER_API_KEY}`)
     .then(res => res.json());
@@ -105,7 +97,6 @@ const getAuthTokenForCountryStateCity = async () => {
 
 export {
     getLocationFromCoordinates,
-    getCityFromLocation,
     getLocationFromCity,
     getCountries,
     getCountryNameFromCountryCode,
